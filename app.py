@@ -126,9 +126,46 @@ class ImageViewer:
 
     def updateUIafterLoading(self):
         """Update the UI after images are loaded"""
+        self.countLabel.configure(text=f"{len(self.imageFiles)} images")
+        self.currentIndex = 0
+        self.createThumbnails()
+        self.displayCurrentImage()
 
     def showNoImages(self):
         """Show message when no images found"""
+        self.imageLabel.configure(text="No images found in selected folder")
+        self.countLabel.configure(text="0 images")
+        # Clear thumbnails
+        for widget in self.thumbnailScroll.winfo_children():
+            widget.destroy()
+        self.thumbnailButtons.clear()
+
+    def createThumbnails(self):
+        """Create thumbnail buttons in the filmstrip"""
+
+    def displayCurrentImage(self):
+        """Display the currently selected image in large preview"""
+        if not self.imageFiles:
+            return
+
+        # Load current image
+        currentFile = self.imageFiles[self.currentIndex]
+        imagePath = os.path.join(self.currentFolder, currentFile)
+
+        # Open and resize image to fit display area
+        image = Image.open(imagePath)
+
+        # Calculate size to fit in display area (max 600x400)
+        maxWidth, maxHeight = 600, 400
+        image.thumbnail((maxWidth, maxHeight), Image.Resampling.LANCZOS)
+
+        # Convert to PhotoImage and display
+        photo = ImageTk.PhotoImage(image)
+        self.imageLabel.configure(image=photo, text="")
+        self.imageLabel.image = photo
+
+        # Update window title with filename
+        self.root.title(f"Image Viewer - {currentFile}")
 
     def run(self):
         """Start the GUI application"""
