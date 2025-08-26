@@ -50,6 +50,14 @@ class ImageViewer:
         )
         self.browseBtn.pack(side="left", padx=10, pady=10)
 
+        # Folder path label
+        self.folderLabel = ctk.CTkLabel(
+            topFrame,
+            text="No folder selected",
+            font=ctk.CTkFont(size=12)
+        )
+        self.folderLabel.pack(side="left", padx=(20, 10), pady=10)
+
         # Image count label
         self.countLabel = ctk.CTkLabel(
             topFrame,
@@ -82,8 +90,45 @@ class ImageViewer:
         )
         self.thumbnailScroll.pack(fill="x", padx=10, pady=10)
 
-    def browseFolder():
-        pass
+    def browseFolder(self):
+        """Open folder dialog and load images"""
+        folderPath = filedialog.askdirectory(title="Select Image Folder")
+
+        if folderPath:
+            self.currentFolder = folderPath
+            self.folderLabel.configure(
+                text=f"Folder: {os.path.basename(folderPath)}")
+
+            # Load images in a separate thread to prevent GUI freezing
+            threading.Thread(target=self.loadImages, daemon=True).start()
+
+            # Show loading message
+            self.imageLabel.configure(text="Loading images...")
+            self.countLabel.configure(text="Loading...")
+
+    def loadImages(self):
+        """Load all images from the selected folder"""
+        allFiles = os.listdir(self.currentFolder)
+        self.imageFiles = [
+            f for f in allFiles
+            if f.lower().endswith(self.supportedFormats)
+        ]
+
+        if not self.imageFiles:
+            self.root.after(0, lambda: self.showNoImages())
+            return
+
+        # Sort files naturally
+        self.imageFiles.sort()
+
+        # Update UI in main thread
+        self.root.after(0, lambda: self.updateUIafterLoading())
+
+    def updateUIafterLoading(self):
+        """Update the UI after images are loaded"""
+
+    def showNoImages(self):
+        """Show message when no images found"""
 
     def run(self):
         """Start the GUI application"""
