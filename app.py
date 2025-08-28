@@ -40,8 +40,13 @@ class ImageViewer:
         topFrame = ctk.CTkFrame(mainFrame)
         topFrame.pack(fill="x", padx=10, pady=(10, 5))
 
+        # Top left section - For browser and other utilities
+        topLeftFrame = ctk.CTkFrame(topFrame)
+        topLeftFrame.pack(side="left", fill="both",
+                          expand=True, padx=5, pady=(5, 2.5))
+
         self.browseBtn = ctk.CTkButton(
-            topFrame,
+            topLeftFrame,
             text="📁 Browse Folder",
             command=self.browseFolder,
             font=ctk.CTkFont(size=14, weight="bold"),
@@ -50,9 +55,14 @@ class ImageViewer:
         )
         self.browseBtn.pack(side="left", padx=10, pady=10)
 
+        # Top right section - For folder name and other stats
+        topRightFrame = ctk.CTkFrame(topFrame)
+        topRightFrame.pack(side="right", fill="y", padx=5, pady=(5, 2.5))
+        topRightFrame.configure(width=280)
+
         # Folder path label
         self.folderLabel = ctk.CTkLabel(
-            topFrame,
+            topRightFrame,
             text="No folder selected",
             font=ctk.CTkFont(size=12)
         )
@@ -60,7 +70,7 @@ class ImageViewer:
 
         # Image count label
         self.countLabel = ctk.CTkLabel(
-            topFrame,
+            topRightFrame,
             text="",
             font=ctk.CTkFont(size=12)
         )

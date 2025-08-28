@@ -1,0 +1,14 @@
+{
+    "folder1": {
+        "folder": "source_dir//receiving_dir//folder1",
+        "images": []
+    },
+    "folder2": {
+        "folder": "source_dir//receiving_dir//folder2",
+        "images": []
+    },
+    "folder3": {
+        "folder": "source_dir//receiving_dir//folder3",
+        "images": []
+    }
+}
