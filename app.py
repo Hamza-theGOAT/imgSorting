@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
 import json
+import shutil
 from PIL import Image, ImageTk
 import threading
 
@@ -81,6 +82,17 @@ class ImageViewer:
             justify="center"
         )
         self.optionDropdown.pack(side="left", padx=(10, 10), pady=10)
+
+        # File transfer button to move selected files to new folders
+        self.trnsBtn = ctk.CTkButton(
+            topLeftFrame,
+            text="MOVE",
+            command=self.moveFiles,
+            font=self.textStyles["button"],
+            height=40,
+            width=40
+        )
+        self.trnsBtn.pack(side="right", padx=10, pady=10)
 
         # Update JSON button to push session data to JSON
         self.updJSON = ctk.CTkButton(
@@ -292,17 +304,26 @@ class ImageViewer:
     def onDropSelection(self, selectedValue):
         """Handle dropdown selection changes"""
         self.defaultOpt.set(selectedValue)
-        print(f"Moving {self.currentFile} to {selectedValue}")
-        # curList = self.pathz[selectedValue]['images']
+
         if self.currentFile not in self.pathz[selectedValue]['images']:
             self.pathz[selectedValue]['images'].append(self.currentFile)
-        # self.pathz[selectedValue]['images'] = curList
 
     def updateJSON(self):
         """Updates JSON with the data from session"""
         print("Updating JSON...")
         with open('paths.json', 'w', encoding='utf-8') as j:
             json.dump(self.pathz, j, indent=4, ensure_ascii=False)
+
+    def moveFiles(self):
+        """To move queued up files from JSON to the provided folders"""
+        for key, val in self.pathz.items():
+            print(f"Moving files for: {key}")
+            for img in val['images']:
+                filePath = os.path.join(self.currentFolder, img)
+                shutil.move(
+                    filePath,
+                    val['folder']
+                )
 
     def run(self):
         """Start the GUI application"""

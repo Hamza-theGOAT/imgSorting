@@ -1,14 +1,26 @@
 {
     "folder1": {
         "folder": "source_dir//receiving_dir//folder1",
-        "images": []
+        "images": [
+            "luminal_fog4.jpg",
+            "luminal_fog5.jpg",
+            "luminal_fog6.jpg"
+        ]
     },
     "folder2": {
         "folder": "source_dir//receiving_dir//folder2",
-        "images": []
+        "images": [
+            "luminal_fog1.jpg",
+            "luminal_fog2.jpg",
+            "luminal_fog3.jpg"
+        ]
     },
     "folder3": {
         "folder": "source_dir//receiving_dir//folder3",
-        "images": []
+        "images": [
+            "luminal_fog7.jpg",
+            "luminal_fog8.jpg",
+            "luminal_fog9.jpg"
+        ]
     }
 }
