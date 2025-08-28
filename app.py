@@ -36,8 +36,8 @@ class ImageViewer:
         self.textStyles = {
             "header": ctk.CTkFont(size=16, weight="bold", family="Monaco"),
             "button": ctk.CTkFont(size=14, weight="bold", family="Monaco"),
-            "normal": ctk.CTkFont(size=12, family="Liberation Mono"),
-            "small": ctk.CTkFont(size=10, family="Liberation Mono")
+            "normal": ctk.CTkFont(size=12, family="Courier"),
+            "small": ctk.CTkFont(size=10, family="Courier")
         }
 
         self.createWidgets()
@@ -264,6 +264,7 @@ class ImageViewer:
 
         # Update window title with filename
         self.root.title(f"Image Viewer - {currentFile}")
+        self.currentFile = currentFile
 
     def getPathz(self):
         with open('paths.json', 'r', encoding='utf-8') as j:
@@ -272,8 +273,16 @@ class ImageViewer:
 
         return pathz, folders
 
-    def onDropSelection(self):
-        print("Dropdown option selected")
+    def onDropSelection(self, selectedValue):
+        """Handle dropdown selection changes"""
+        self.defaultOpt.set(selectedValue)
+        print(f"Moving {self.currentFile} to {selectedValue}")
+        # curList = self.pathz[selectedValue]['images']
+        if self.currentFile not in self.pathz[selectedValue]['images']:
+            self.pathz[selectedValue]['images'].append(self.currentFile)
+        # self.pathz[selectedValue]['images'] = curList
+        with open('paths.json', 'w', encoding='utf-8') as j:
+            json.dump(self.pathz, j, indent=4, ensure_ascii=False)
 
     def run(self):
         """Start the GUI application"""
