@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import os
+import json
 from PIL import Image, ImageTk
 import threading
 
@@ -27,6 +28,18 @@ class ImageViewer:
         self.supportedFormats = (
             '.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff')
 
+        # Get pathz dict and folder options
+        self.pathz, self.optFolders = self.getPathz()
+        self.defaultOpt = ctk.StringVar(value=self.optFolders[0])
+
+        # Text styles dict
+        self.textStyles = {
+            "header": ctk.CTkFont(size=16, weight="bold", family="Monaco"),
+            "button": ctk.CTkFont(size=14, weight="bold", family="Monaco"),
+            "normal": ctk.CTkFont(size=12, family="Liberation Mono"),
+            "small": ctk.CTkFont(size=10, family="Liberation Mono")
+        }
+
         self.createWidgets()
 
     def createWidgets(self):
@@ -49,11 +62,24 @@ class ImageViewer:
             topLeftFrame,
             text="📁 Browse Folder",
             command=self.browseFolder,
-            font=ctk.CTkFont(size=14, weight="bold"),
+            font=self.textStyles["button"],
             height=40,
             width=150
         )
         self.browseBtn.pack(side="left", padx=10, pady=10)
+
+        # Dropdown menu for folders
+        self.optionDropdown = ctk.CTkComboBox(
+            topLeftFrame,
+            values=self.optFolders,
+            variable=self.defaultOpt,
+            command=self.onDropSelection,
+            font=self.textStyles["normal"],
+            height=40,
+            width=140,
+            justify="center"
+        )
+        self.optionDropdown.pack(side="left", padx=(10, 10), pady=10)
 
         # Top right section - For folder name and other stats
         topRightFrame = ctk.CTkFrame(topFrame)
@@ -64,7 +90,7 @@ class ImageViewer:
         self.folderLabel = ctk.CTkLabel(
             topRightFrame,
             text="No folder selected",
-            font=ctk.CTkFont(size=12)
+            font=self.textStyles["normal"]
         )
         self.folderLabel.pack(side="left", padx=(20, 10), pady=10)
 
@@ -72,7 +98,7 @@ class ImageViewer:
         self.countLabel = ctk.CTkLabel(
             topRightFrame,
             text="",
-            font=ctk.CTkFont(size=12)
+            font=self.textStyles["normal"]
         )
         self.countLabel.pack(side="right", padx=10, pady=10)
 
@@ -84,7 +110,7 @@ class ImageViewer:
         self.imageLabel = ctk.CTkLabel(
             self.imageFrame,
             text="Select a folder to view images",
-            font=ctk.CTkFont(size=16)
+            font=self.textStyles["header"]
         )
         self.imageLabel.pack(expand=True, fill="both", padx=20, pady=20)
 
@@ -238,6 +264,16 @@ class ImageViewer:
 
         # Update window title with filename
         self.root.title(f"Image Viewer - {currentFile}")
+
+    def getPathz(self):
+        with open('paths.json', 'r', encoding='utf-8') as j:
+            pathz = json.load(j)
+        folders = [p for p in pathz.keys()]
+
+        return pathz, folders
+
+    def onDropSelection(self):
+        print("Dropdown option selected")
 
     def run(self):
         """Start the GUI application"""
