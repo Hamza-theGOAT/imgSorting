@@ -41,7 +41,11 @@ class ImageViewer:
             "small": ctk.CTkFont(size=10, family="Courier")
         }
 
+        # Main frame creation
         self.mainSection()
+
+        # Keybind initiation
+        self.keyNavigation()
 
     def mainSection(self):
         """Create all the GUI elements"""
@@ -338,6 +342,34 @@ class ImageViewer:
                     filePath,
                     val['folder']
                 )
+
+    def keyNavigation(self):
+        """Setup keyboard navigation for images"""
+        # Bind arrow keys to navigation function
+        self.root.bind('<Left>', self.previousImg)
+        self.root.bind('<Right>', self.nextImg)
+        self.root.bind('<Up>', self.firstImg)
+        self.root.bind('<Down>', self.lastImg)
+
+    def previousImg(self, event=None):
+        """Navigate to previous image"""
+        if self.imageFiles and self.currentIndex > 0:
+            self.selectImage(self.currentIndex-1)
+
+    def nextImg(self, event=None):
+        """Navigate to next image"""
+        if self.imageFiles and self.currentIndex < len(self.imageFiles)-1:
+            self.selectImage(self.currentIndex+1)
+
+    def firstImg(self, event=None):
+        """Navigate to next image"""
+        if self.imageFiles:
+            self.selectImage(0)
+
+    def lastImg(self, event=None):
+        """Navigate to last image"""
+        if self.imageFiles:
+            self.selectImage(len(self.imageFiles)-1)
 
     def run(self):
         """Start the GUI application"""
