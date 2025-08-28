@@ -58,6 +58,7 @@ class ImageViewer:
         topLeftFrame.pack(side="left", fill="both",
                           expand=True, padx=5, pady=(5, 2.5))
 
+        # Browser button to select source folder
         self.browseBtn = ctk.CTkButton(
             topLeftFrame,
             text="📁 Browse Folder",
@@ -80,6 +81,17 @@ class ImageViewer:
             justify="center"
         )
         self.optionDropdown.pack(side="left", padx=(10, 10), pady=10)
+
+        # Update JSON button to push session data to JSON
+        self.updJSON = ctk.CTkButton(
+            topLeftFrame,
+            text="JSON",
+            command=self.updateJSON,
+            font=self.textStyles["button"],
+            height=40,
+            width=40
+        )
+        self.updJSON.pack(side="right", padx=10, pady=10)
 
         # Top right section - For folder name and other stats
         topRightFrame = ctk.CTkFrame(topFrame)
@@ -269,7 +281,11 @@ class ImageViewer:
     def getPathz(self):
         with open('paths.json', 'r', encoding='utf-8') as j:
             pathz = json.load(j)
-        folders = [p for p in pathz.keys()]
+
+        folders = []
+        for key, val in pathz.items():
+            val['images'] = []
+            folders.append(key)
 
         return pathz, folders
 
@@ -281,6 +297,10 @@ class ImageViewer:
         if self.currentFile not in self.pathz[selectedValue]['images']:
             self.pathz[selectedValue]['images'].append(self.currentFile)
         # self.pathz[selectedValue]['images'] = curList
+
+    def updateJSON(self):
+        """Updates JSON with the data from session"""
+        print("Updating JSON...")
         with open('paths.json', 'w', encoding='utf-8') as j:
             json.dump(self.pathz, j, indent=4, ensure_ascii=False)
 
