@@ -41,27 +41,38 @@ class ImageViewer:
             "small": ctk.CTkFont(size=10, family="Courier")
         }
 
-        self.createWidgets()
+        self.mainSection()
 
-    def createWidgets(self):
+    def mainSection(self):
         """Create all the GUI elements"""
 
         # Main container frame
-        mainFrame = ctk.CTkFrame(self.root)
-        mainFrame.pack(fill="both", expand=True, padx=10, pady=10)
+        self.mainFrame = ctk.CTkFrame(self.root)
+        self.mainFrame.pack(fill="both", expand=True, padx=10, pady=10)
 
+        # Add sub Sections for the frame
+        self.topSection()
+        self.imageSection()
+        self.thumbnailSection()
+
+    def topSection(self):
         # Top section - Browse button and folder info
-        topFrame = ctk.CTkFrame(mainFrame)
-        topFrame.pack(fill="x", padx=10, pady=(10, 5))
+        self.topFrame = ctk.CTkFrame(self.mainFrame)
+        self.topFrame.pack(fill="x", padx=10, pady=(10, 5))
 
+        # Add sub Sections for the frame
+        self.topLeftSection()
+        self.topRightSection()
+
+    def topLeftSection(self):
         # Top left section - For browser and other utilities
-        topLeftFrame = ctk.CTkFrame(topFrame)
-        topLeftFrame.pack(side="left", fill="both",
-                          expand=True, padx=5, pady=(5, 2.5))
+        self.topLeftFrame = ctk.CTkFrame(self.topFrame)
+        self.topLeftFrame.pack(side="left", fill="both",
+                               expand=True, padx=5, pady=(5, 2.5))
 
         # Browser button to select source folder
         self.browseBtn = ctk.CTkButton(
-            topLeftFrame,
+            self.topLeftFrame,
             text="📁 Browse Folder",
             command=self.browseFolder,
             font=self.textStyles["button"],
@@ -72,7 +83,7 @@ class ImageViewer:
 
         # Dropdown menu for folders
         self.optionDropdown = ctk.CTkComboBox(
-            topLeftFrame,
+            self.topLeftFrame,
             values=self.optFolders,
             variable=self.defaultOpt,
             command=self.onDropSelection,
@@ -85,7 +96,7 @@ class ImageViewer:
 
         # File transfer button to move selected files to new folders
         self.trnsBtn = ctk.CTkButton(
-            topLeftFrame,
+            self.topLeftFrame,
             text="MOVE",
             command=self.moveFiles,
             font=self.textStyles["button"],
@@ -96,7 +107,7 @@ class ImageViewer:
 
         # Update JSON button to push session data to JSON
         self.updJSON = ctk.CTkButton(
-            topLeftFrame,
+            self.topLeftFrame,
             text="JSON",
             command=self.updateJSON,
             font=self.textStyles["button"],
@@ -105,8 +116,9 @@ class ImageViewer:
         )
         self.updJSON.pack(side="right", padx=10, pady=10)
 
+    def topRightSection(self):
         # Top right section - For folder name and other stats
-        topRightFrame = ctk.CTkFrame(topFrame)
+        topRightFrame = ctk.CTkFrame(self.topFrame)
         topRightFrame.pack(side="right", fill="y", padx=5, pady=(5, 2.5))
         topRightFrame.configure(width=280)
 
@@ -126,8 +138,9 @@ class ImageViewer:
         )
         self.countLabel.pack(side="right", padx=10, pady=10)
 
+    def imageSection(self):
         # Main image display area
-        self.imageFrame = ctk.CTkFrame(mainFrame)
+        self.imageFrame = ctk.CTkFrame(self.mainFrame)
         self.imageFrame.pack(fill="both", expand=True, padx=10, pady=5)
 
         # Large image preview label
@@ -138,8 +151,9 @@ class ImageViewer:
         )
         self.imageLabel.pack(expand=True, fill="both", padx=20, pady=20)
 
+    def thumbnailSection(self):
         # Scrollable frame for thumbnails
-        self.thumbnailFrame = ctk.CTkFrame(mainFrame)
+        self.thumbnailFrame = ctk.CTkFrame(self.mainFrame)
         self.thumbnailFrame.pack(fill="x", padx=10, pady=(5, 10), ipady=10)
 
         # Scrollable frame for thumbnails

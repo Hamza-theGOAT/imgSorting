@@ -3,8 +3,7 @@
         "folder": "source_dir//receiving_dir//folder1",
         "images": [
             "luminal_fog4.jpg",
-            "luminal_fog5.jpg",
-            "luminal_fog6.jpg"
+            "luminal_fog5.jpg"
         ]
     },
     "folder2": {
@@ -18,9 +17,7 @@
     "folder3": {
         "folder": "source_dir//receiving_dir//folder3",
         "images": [
-            "luminal_fog7.jpg",
-            "luminal_fog8.jpg",
-            "luminal_fog9.jpg"
+            "luminal_fog6.jpg"
         ]
     }
 }
