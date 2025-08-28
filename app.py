@@ -142,6 +142,66 @@ class ImageViewer:
 
     def createThumbnails(self):
         """Create thumbnail buttons in the filmstrip"""
+        # Clear existing thumbnails
+        for widget in self.thumbnailScroll.winfo_children():
+            widget.destroy()
+        self.thumbnailButtons.clear()
+
+        # Create thumbnail for each image
+        for i, filename in enumerate(self.imageFiles):
+            # Load and resize image for thumbnail
+            imagePath = os.path.join(self.currentFolder, filename)
+            image = Image.open(imagePath)
+
+            # Create thumbnail button
+            image.thumbnail((60, 60), Image.Resampling.LANCZOS)
+            photo = ctk.CTkImage(
+                light_image=image, dark_image=image, size=(60, 60)
+            )
+
+            # Create thumbnaul button
+            thumbBtn = ctk.CTkButton(
+                self.thumbnailScroll,
+                image=photo,
+                text="",
+                width=70,
+                height=70,
+                command=lambda idx=i: self.selectImage(idx)
+            )
+            thumbBtn.pack(side="left", padx=2, pady=2)
+
+            # Store reference to prevent garbage collection
+            thumbBtn.image = photo
+            self.thumbnailButtons.append(thumbBtn)
+
+        # Hightlight first thumbnail
+        if self.thumbnailButtons:
+            self.highlightThumbnail(0)
+
+    def selectImage(self, index):
+        """Select and display image at given index"""
+        if 0 <= index < len(self.imageFiles):
+            self.currentIndex = index
+            self.displayCurrentImage()
+            self.highlightThumbnail(index)
+
+    def highlightThumbnail(self, index):
+        """Highlight the selected thumbnail"""
+        # Reset all thumbnails to normal
+        for btn in self.thumbnailButtons:
+            btn.configure(
+                border_width=2,
+                border_color="gray10",
+                fg_color=("gray10", "gray10")
+            )
+
+        # Highlight selected thumbnail
+        if 0 <= index < len(self.thumbnailButtons):
+            self.thumbnailButtons[index].configure(
+                border_width=3,
+                border_color="blue",
+                fg_color=("lightblue", "darkblue")
+            )
 
     def displayCurrentImage(self):
         """Display the currently selected image in large preview"""
@@ -160,7 +220,9 @@ class ImageViewer:
         image.thumbnail((maxWidth, maxHeight), Image.Resampling.LANCZOS)
 
         # Convert to PhotoImage and display
-        photo = ImageTk.PhotoImage(image)
+        photo = ctk.CTkImage(
+            light_image=image, dark_image=image, size=image.size
+        )
         self.imageLabel.configure(image=photo, text="")
         self.imageLabel.image = photo
 
