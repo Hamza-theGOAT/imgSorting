@@ -4,7 +4,7 @@ from tkinter import filedialog, messagebox
 import os
 import json
 import shutil
-from PIL import Image, ImageTk
+from PIL import Image
 import threading
 
 # Set the appearance mode and color theme
@@ -99,26 +99,52 @@ class ImageViewer:
         self.optionDropdown.pack(side="left", padx=(10, 10), pady=10)
 
         # File transfer button to move selected files to new folders
+        image = Image.open("source_dir//icons//play.png")
+        ctkImg = ctk.CTkImage(
+            light_image=image, dark_image=image, size=(40, 40)
+        )
         self.trnsBtn = ctk.CTkButton(
             self.topLeftFrame,
-            text="MOVE",
+            text="",
+            fg_color="transparent",
             command=self.moveFiles,
-            font=self.textStyles["button"],
+            image=ctkImg,
             height=40,
-            width=40
+            width=20
         )
-        self.trnsBtn.pack(side="right", padx=10, pady=10)
+        self.trnsBtn.pack(side="right", padx=10, pady=5)
+
+        # Reverse button to undo file move
+        image = Image.open("source_dir//icons//reverse.png")
+        ctkImg = ctk.CTkImage(
+            light_image=image, dark_image=image, size=(35, 35)
+        )
+        self.revBtn = ctk.CTkButton(
+            self.topLeftFrame,
+            text="",
+            fg_color="transparent",
+            command=self.moveFiles,
+            image=ctkImg,
+            height=40,
+            width=20
+        )
+        self.revBtn.pack(side="right", padx=10, pady=5)
 
         # Update JSON button to push session data to JSON
+        image = Image.open("source_dir//icons//json.png")
+        ctkImg = ctk.CTkImage(
+            light_image=image, dark_image=image, size=(40, 40)
+        )
         self.updJSON = ctk.CTkButton(
             self.topLeftFrame,
-            text="JSON",
-            command=self.updateJSON,
-            font=self.textStyles["button"],
+            text="",
+            fg_color="transparent",
+            command=self.moveFiles,
+            image=ctkImg,
             height=40,
-            width=40
+            width=20
         )
-        self.updJSON.pack(side="right", padx=10, pady=10)
+        self.updJSON.pack(side="right", padx=10, pady=5)
 
     def topRightSection(self):
         # Top right section - For folder name and other stats
@@ -341,6 +367,16 @@ class ImageViewer:
                 shutil.move(
                     filePath,
                     val['folder']
+                )
+
+    def resetMove(self):
+        """To undo the file moving"""
+        for key, val in self.pathz.items():
+            for file in val['images']:
+                filename = os.path.join(val['folder'], file)
+                shutil.move(
+                    filename,
+                    self.currentFolder
                 )
 
     def keyNavigation(self):
